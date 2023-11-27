@@ -7,6 +7,7 @@ const main = async () => {
     await mongoose.connect(config.database_uri as string);
     app.listen(config.port, () => {
       console.log(`university app listening at port ${config.port}`);
+      console.log('Database is connected✅');
     });
   } catch (error) {
     console.log(error);
