@@ -52,10 +52,7 @@ const studentSchema = new Schema<TStudent>({
     unique: true,
     ref: 'User',
   },
-  password: {
-    type: String,
-    required: true,
-  },
+
   name: {
     type: userNameSchema,
     required: [true, 'name is required'],
@@ -74,10 +71,6 @@ const studentSchema = new Schema<TStudent>({
     required: true,
     unique: true,
     trim: true,
-    // validate: {
-    //   validator: (value: string) => validator.isEmail(value),
-    //   message: '{VALUE} is not a valid email',
-    // },
   },
   dateOfBirth: {
     type: String,
@@ -119,22 +112,6 @@ const studentSchema = new Schema<TStudent>({
     required: true,
     default: false,
   },
-});
-
-// virtual
-studentSchema.virtual('fullName').get(function () {
-  return `${this.name.firstName} ${this.name.lastName}`;
-});
-
-// pre save middleware
-studentSchema.pre('save', async function (next) {
-  this.password = await bcrypt.hash(this.password, 12);
-  next();
-});
-
-studentSchema.post('save', async function (doc, next) {
-  doc.password = '';
-  next();
 });
 
 // query middleware
