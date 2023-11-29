@@ -1,7 +1,5 @@
 import { Schema, model } from 'mongoose';
 // import validator from 'validator';
-import bcrypt from 'bcrypt';
-
 import {
   TGuardian,
   TLocalGuardian,
@@ -73,7 +71,7 @@ const studentSchema = new Schema<TStudent>({
     trim: true,
   },
   dateOfBirth: {
-    type: String,
+    type: Date,
   },
   contactNo: {
     type: String,
