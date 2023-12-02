@@ -112,7 +112,7 @@ const studentSchema = new Schema<TStudent>({
 
   isDeleted: {
     type: Boolean,
-    required: true,
+
     default: false,
   },
   academicDepartment: {
@@ -122,20 +122,20 @@ const studentSchema = new Schema<TStudent>({
 });
 
 // query middleware
-studentSchema.pre('find', function (next) {
-  this.find({ isDeleted: { $ne: true } });
-  next();
-});
+// studentSchema.pre('find', function (next) {
+//   this.find({ isDeleted: { $ne: true } });
+//   next();
+// });
 
-studentSchema.pre('findOne', function (next) {
-  this.find({ isDeleted: { $ne: true } });
-  next();
-});
+// studentSchema.pre('findOne', function (next) {
+//   this.find({ isDeleted: { $ne: true } });
+//   next();
+// });
 
-studentSchema.pre('aggregate', function (next) {
-  this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } });
-  next();
-});
+// studentSchema.pre('aggregate', function (next) {
+//   this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } });
+//   next();
+// });
 
 // create model
 export const StudentModel = model<TStudent>('Student', studentSchema);
