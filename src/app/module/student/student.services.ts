@@ -3,6 +3,7 @@ import { StudentModel } from './student.model';
 import AppError from '../../errors/AppError';
 import httpStatus from 'http-status';
 import { User } from '../user/user.model';
+import { TStudent } from './Student.interface';
 
 const getAllStudentFromDB = async () => {
   const result = await StudentModel.find()
@@ -15,12 +16,51 @@ const getAllStudentFromDB = async () => {
 };
 
 const getSingleStudentFromDB = async (id: string | number) => {
-  const result = await StudentModel.findById({ _id: id })
+  const result = await StudentModel.findOne({ id })
     .populate('admissionSemester')
     .populate({
       path: 'academicDepartment',
       populate: 'academicFaculty',
     });
+  return result;
+};
+
+const updateStudentIntoDB = async (
+  id: string | number,
+  payload: Partial<TStudent>,
+) => {
+  const { name, guardian, localGuardian, ...remainingData } = payload;
+
+  const modifiedUpdatedData: Record<string, unknown> = {
+    ...remainingData,
+  };
+
+  if (name && Object.keys(name).length) {
+    for (const [key, value] of Object.entries(name)) {
+      modifiedUpdatedData[`name.${key}`] = value;
+    }
+  }
+
+  if (guardian && Object.keys(guardian).length) {
+    for (const [key, value] of Object.entries(guardian)) {
+      modifiedUpdatedData[`name.${key}`] = value;
+    }
+  }
+
+  if (localGuardian && Object.keys(localGuardian).length) {
+    for (const [key, value] of Object.entries(localGuardian)) {
+      modifiedUpdatedData[`name.${key}`] = value;
+    }
+  }
+
+  const result = await StudentModel.findOneAndUpdate(
+    { id },
+    modifiedUpdatedData,
+    {
+      new: true,
+    },
+  );
+
   return result;
 };
 
@@ -56,6 +96,7 @@ const deleteStudentFromDB = async (id: string | number) => {
   } catch (error) {
     await session.abortTransaction();
     await session.endSession();
+    throw new AppError(httpStatus.BAD_REQUEST, 'failed to delete student');
   }
 };
 
@@ -63,4 +104,7 @@ export const studentService = {
   getAllStudentFromDB,
   getSingleStudentFromDB,
   deleteStudentFromDB,
+  updateStudentIntoDB,
 };
+
+
