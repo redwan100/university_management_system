@@ -1,13 +1,13 @@
-import { TUser } from './user.interface';
-import config from '../../config';
-import { TStudent } from '../student/Student.interface';
-import { User } from './user.model';
-import { StudentModel } from '../student/student.model';
-import { AcademicSemester } from '../academicSemester/academicSemester.model';
-import { generateStudentId } from './user.utils';
-import mongoose from 'mongoose';
-import AppError from '../../errors/AppError';
 import httpStatus from 'http-status';
+import mongoose from 'mongoose';
+import config from '../../config';
+import AppError from '../../errors/AppError';
+import { AcademicSemester } from '../academicSemester/academicSemester.model';
+import { TStudent } from '../student/Student.interface';
+import { StudentModel } from '../student/student.model';
+import { TUser } from './user.interface';
+import { User } from './user.model';
+import { generateStudentId } from './user.utils';
 
 const createStudentIntoDB = async (password: string, payload: TStudent) => {
   // TODO: create a user object
@@ -50,9 +50,11 @@ const createStudentIntoDB = async (password: string, payload: TStudent) => {
     await session.endSession();
 
     return newStudent;
-  } catch (error) {
+  } catch (error: any) {
     await session.abortTransaction();
     await session.endSession();
+
+    throw new Error(error);
   }
 };
 

@@ -1,12 +1,21 @@
-import mongoose from 'mongoose';
-import { StudentModel } from './student.model';
-import AppError from '../../errors/AppError';
 import httpStatus from 'http-status';
+import mongoose from 'mongoose';
+import AppError from '../../errors/AppError';
 import { User } from '../user/user.model';
 import { TStudent } from './Student.interface';
+import { StudentModel } from './student.model';
 
-const getAllStudentFromDB = async () => {
-  const result = await StudentModel.find()
+const getAllStudentFromDB = async (query: Record<string, unknown>) => {
+  let searchTerm = '';
+  if (query?.searchTerm) {
+    searchTerm = query?.searchTerm as string;
+  }
+
+  const result = await StudentModel.find({
+    $or: ['email', 'name.firstName'].map((field) => ({
+      [field]: { $regex: searchTerm, $options: 'i' },
+    })),
+  })
     .populate('admissionSemester')
     .populate({
       path: 'academicDepartment',
@@ -93,10 +102,10 @@ const deleteStudentFromDB = async (id: string | number) => {
     await session.endSession();
 
     return deletedStudent;
-  } catch (error) {
+  } catch (error: any) {
     await session.abortTransaction();
     await session.endSession();
-    throw new AppError(httpStatus.BAD_REQUEST, 'failed to delete student');
+    throw new Error(error);
   }
 };
 
@@ -106,5 +115,3 @@ export const studentService = {
   deleteStudentFromDB,
   updateStudentIntoDB,
 };
-
-
