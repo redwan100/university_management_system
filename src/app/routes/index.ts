@@ -1,9 +1,14 @@
 import { Router } from 'express';
-import { userRouter } from '../module/user/user.route';
-import { studentRouter } from '../module/student/student.route';
-import { academicSemesterRoutes } from '../module/academicSemester/academicSemester.route';
-import { academicFacultyRoutes } from '../module/academicFaculty/academicFaculty.route';
+import { authRoutes } from '../module/Auth/auth.route';
 import { academicDepartmentRoutes } from '../module/academicDepartment/academicDepartment.route';
+import { academicFacultyRoutes } from '../module/academicFaculty/academicFaculty.route';
+import { academicSemesterRoutes } from '../module/academicSemester/academicSemester.route';
+import { AdminRoutes } from '../module/admin/admin.route';
+import { courseRoutes } from '../module/course/course.route';
+import { FacultyRoutes } from '../module/faculty/faculty.route';
+import { semesterRegistrationRoutes } from '../module/semesterRegistration/semesterRegistration.route';
+import { studentRouter } from '../module/student/student.route';
+import { userRouter } from '../module/user/user.route';
 
 const router = Router();
 
@@ -28,6 +33,26 @@ const moduleRoutes = [
   {
     path: '/academic-departments',
     route: academicDepartmentRoutes,
+  },
+  {
+    path: '/faculties',
+    route: FacultyRoutes,
+  },
+  {
+    path: '/admins',
+    route: AdminRoutes,
+  },
+  {
+    path: '/courses',
+    route: courseRoutes,
+  },
+  {
+    path: '/semester-registrations',
+    route: semesterRegistrationRoutes,
+  },
+  {
+    path: '/auth',
+    route: authRoutes,
   },
 ];
 
