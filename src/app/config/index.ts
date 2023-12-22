@@ -9,4 +9,5 @@ export default {
   database_uri: process.env.MONGODB_URI,
   default_pass: process.env.DEFAULT_PASS,
   jwt_access_secret: process.env.JWT_ACCESS_SECRET,
+  jwt_refresh_secret: process.env.JWT_REFRESH_SECRET,
 };
