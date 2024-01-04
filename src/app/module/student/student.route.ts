@@ -1,4 +1,5 @@
 import express from 'express';
+import auth from '../../middleware/auth';
 import validateRequest from '../../middleware/valideteRequest';
 import { StudentController } from './student.controller';
 import { updateStudentValidation } from './student.validation.zod';
@@ -6,7 +7,13 @@ import { updateStudentValidation } from './student.validation.zod';
 const router = express.Router();
 
 router.get('/', StudentController.getAllStudents);
-router.get('/:id', StudentController.getSingleStudent);
+
+router.get(
+  '/:id',
+  auth('admin', 'faculty'),
+  StudentController.getSingleStudent,
+);
+
 router.patch(
   '/:id',
   validateRequest(updateStudentValidation),

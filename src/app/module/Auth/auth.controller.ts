@@ -37,7 +37,7 @@ const changePassword = catchAsync(async (req, res) => {
 });
 
 const refreshToken = catchAsync(async (req, res) => {
-  const {refreshToken} = req.cookies;
+  const { refreshToken } = req.cookies;
   const result = await authServices.refreshToken(refreshToken);
 
   sendResponse(res, {
@@ -48,8 +48,36 @@ const refreshToken = catchAsync(async (req, res) => {
   });
 });
 
+const forgetPassword = catchAsync(async (req, res) => {
+  const userId = req.body.id;
+
+  const result = await authServices.forgetPassword(userId);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'reset link is generated successfully',
+    data: result,
+  });
+});
+
+const resetPassword = catchAsync(async (req, res) => {
+  const token = req.headers.authorization
+
+  const result = await authServices.resetPassword(req.body, token);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'password reset successful',
+    data: result,
+  });
+});
+
 export const authController = {
   loginUser,
   changePassword,
   refreshToken,
+  forgetPassword,
+  resetPassword,
 };
