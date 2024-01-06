@@ -7,9 +7,11 @@ import { userService } from './user.service';
 
 const createStudent = catchAsync(async (req, res) => {
   const { password, student: studentData } = req.body;
-
-  // const zodParseData = userValidationSchema.parse(studentData);
-  const result = await userService.createStudentIntoDB(password, studentData);
+  const result = await userService.createStudentIntoDB(
+    req.file,
+    password,
+    studentData,
+  );
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -46,8 +48,6 @@ const createAdmin = catchAsync(async (req, res) => {
 });
 
 const getMe = catchAsync(async (req, res) => {
-
-
   const { userId, role } = req.user;
 
   const result = await userService.getMe(userId, role);
@@ -60,9 +60,22 @@ const getMe = catchAsync(async (req, res) => {
   });
 });
 
+const changeStatus = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const result = await userService.changeStatus(id, req.body);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'status is updated successfully',
+    data: result,
+  });
+});
+
 export const userController = {
   createStudent,
   createFaculty,
   createAdmin,
   getMe,
+  changeStatus,
 };

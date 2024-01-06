@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import httpStatus from 'http-status';
 import mongoose from 'mongoose';
 import config from '../../config';
 import AppError from '../../errors/AppError';
+import { sendImageToCloudinary } from '../../utils/sendImageToCloudinary';
 import { AcademicDepartment } from '../academicDepartment/academicDepartment.model';
 import { AcademicSemester } from '../academicSemester/academicSemester.model';
 import { Admin } from '../admin/admin.model';
@@ -17,7 +19,11 @@ import {
   generateStudentId,
 } from './user.utils';
 
-const createStudentIntoDB = async (password: string, payload: TStudent) => {
+const createStudentIntoDB = async (
+  file: any,
+  password: string,
+  payload: TStudent,
+) => {
   // TODO: create a user object
   const userData: Partial<TUser> = {};
   userData.password = password || (config.default_pass as string);
@@ -38,6 +44,11 @@ const createStudentIntoDB = async (password: string, payload: TStudent) => {
     // set generated id
     userData.id = await generateStudentId(admissionSemester);
 
+    // upload image into cloudinary
+    const imageName = `${userData?.id}${payload?.name?.firstName}`;
+    const path = file?.path;
+    const { secure_url } = await sendImageToCloudinary(imageName, path);
+
     // TODO: create a user (transaction 1)
     const newUser = await User.create([userData], { session });
 
@@ -48,6 +59,7 @@ const createStudentIntoDB = async (password: string, payload: TStudent) => {
     // set id, _id as user
     payload.id = newUser[0].id;
     payload.user = newUser[0]._id; // reference _id
+    payload.profileImg = secure_url;
 
     // TODO: create a student (transaction 2)
     const newStudent = await StudentModel.create([payload], { session });
@@ -189,9 +201,15 @@ const getMe = async (userId: string, role: string) => {
   return result;
 };
 
+const changeStatus = async (id: string, payload: { status: string }) => {
+  const result = await User.findByIdAndUpdate(id, payload, { new: true });
+  return result;
+};
+
 export const userService = {
   createStudentIntoDB,
   createFacultyIntoDB,
   createAdminIntoDB,
   getMe,
+  changeStatus,
 };

@@ -5,7 +5,7 @@ const handleValidationError = (
   err: mongoose.Error.ValidationError,
 ): TGenericErrorResponse => {
   const errorSources: TEerrorSources = Object.values(err.errors).map(
-    (val: mongoose.Error.ValidationError | mongoose.Error.CastError) => {
+    (val: mongoose.Error.ValidatorError | mongoose.Error.CastError) => {
       return {
         path: val?.path,
         message: val?.message,

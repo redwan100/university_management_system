@@ -15,7 +15,7 @@ const globalErrorHandler: ErrorRequestHandler = (
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
   next,
 ) => {
-  let statusCode = err.statusCode || 500;
+  let statusCode = 500;
   let message: string = 'something went wrong';
 
   let errorSources: TEerrorSources = [
@@ -35,12 +35,12 @@ const globalErrorHandler: ErrorRequestHandler = (
     statusCode = simplifiedError?.statusCode;
     message = simplifiedError?.message;
     errorSources = simplifiedError?.errorSources;
-  } else if (err?.name === 'castError') {
+  } else if (err?.name === 'CastError') {
     const simplifiedError = handleCastError(err);
     statusCode = simplifiedError?.statusCode;
     message = simplifiedError?.message;
     errorSources = simplifiedError?.errorSources;
-  } else if (err?.code === 1100) {
+  } else if (err?.code === 11000) {
     const simplifiedError = handleDuplicateError(err);
     statusCode = simplifiedError?.statusCode;
     message = simplifiedError?.message;
@@ -59,6 +59,7 @@ const globalErrorHandler: ErrorRequestHandler = (
     success: false,
     message,
     errorSources,
+    err,
     stack: config.NODE_ENV === 'development' ? err?.stack : null,
   });
 };
