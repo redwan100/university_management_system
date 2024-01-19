@@ -77,7 +77,7 @@ const createOfferedCourseIntoDB = async (payload: TOfferedCourse) => {
     throw new AppError(httpStatus.NOT_FOUND, 'Faculty not found !');
   }
 
-  // check if the department is belong to the  faculty
+  // check if the department is belong to the faculty
   const isDepartmentBelongToFaculty = await AcademicDepartment.findOne({
     _id: academicDepartment,
     academicFaculty,
@@ -90,7 +90,8 @@ const createOfferedCourseIntoDB = async (payload: TOfferedCourse) => {
     );
   }
 
-  // check if the same offered course same section in same registered semester exists
+  //TODO: check if the same offered course same section in same registered semester exists
+
 
   const isSameOfferedCourseExistsWithSameRegisteredSemesterWithSameSection =
     await OfferedCourse.findOne({

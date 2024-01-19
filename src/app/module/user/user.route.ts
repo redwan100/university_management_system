@@ -27,18 +27,31 @@ router.post(
 router.post(
   '/create-faculty',
   auth(USER_ROLE?.admin),
+  upload.single('file'),
+  (req: Request, res: Response, next: NextFunction) => {
+    req.body = JSON.parse(req.body.data);
+    next();
+  },
   validateRequest(facultyValidation.createFacultyValidationSchema),
   userController.createFaculty,
 );
 
 router.post(
   '/create-admin',
+  // auth(USER_ROLE.admin),
+  upload.single('file'),
+  (req: Request, res: Response, next: NextFunction) => {
+    console.log(req.body);
+    req.body = JSON.parse(req.body.data);
+    next();
+  },
   validateRequest(AdminValidations.createAdminValidationSchema),
   userController.createAdmin,
 );
 
 router.post(
   '/change-status/:id',
+  auth('admin'),
   validateRequest(changeStatusValidation),
   userController.changeStatus,
 );
