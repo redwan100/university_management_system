@@ -103,7 +103,7 @@ const studentSchema = new Schema<TStudent>({
     required: true,
   },
 
-  profileImg: { type: String },
+  profileImg: { type: String, default: '' },
 
   admissionSemester: {
     type: Schema.Types.ObjectId,
@@ -118,6 +118,10 @@ const studentSchema = new Schema<TStudent>({
   academicDepartment: {
     type: Schema.Types.ObjectId,
     ref: 'AcademicDepartment',
+  },
+  academicFaculty: {
+    type: Schema.Types.ObjectId,
+    ref: 'AcademicFaculty',
   },
 });
 

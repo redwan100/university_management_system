@@ -97,7 +97,7 @@ const changePassword = async (
 
 const refreshToken = async (token: string) => {
   // TODO: check if the token is valid
-  const decoded = verifyToken(token, config.jwt_refresh_secret as string) 
+  const decoded = verifyToken(token, config.jwt_refresh_secret as string);
 
   const { userId, iat } = decoded;
 
@@ -131,7 +131,7 @@ const refreshToken = async (token: string) => {
   const accessToken = createToken(
     jwtPayload,
     config.jwt_access_secret as string,
-    '10d',
+    '1d',
   );
 
   return {
@@ -200,9 +200,9 @@ const resetPassword = async (
     throw new AppError(httpStatus.FORBIDDEN, 'you are forbidden');
   }
 
-  // hash new password 
+  // hash new password
   const newHashedPassword = await bcrypt.hash(payload?.newPassword, 12);
- 
+
   await User.findOneAndUpdate(
     {
       id: decoded?.id,
