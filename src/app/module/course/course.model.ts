@@ -22,7 +22,6 @@ const courseSchema = new Schema<TCourse>({
   prefix: {
     type: String,
     required: true,
-    unique: true,
     trim: true,
   },
   code: {
