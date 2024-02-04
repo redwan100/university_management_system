@@ -17,11 +17,11 @@ const globalErrorHandler: ErrorRequestHandler = (
 ) => {
   let statusCode = 500;
   let message: string = 'something went wrong';
-
+  console.log(err);
   let errorSources: TEerrorSources = [
     {
       path: '',
-      message: 'Something went wrong',
+      message: err?.message,
     },
   ];
 

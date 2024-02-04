@@ -21,14 +21,12 @@ export const createAdminValidationSchema = z.object({
       bloodGroup: z.enum([...BloodGroup] as [string, ...string[]]),
       presentAddress: z.string(),
       permanentAddress: z.string(),
-      profileImg: z.string(),
+      profileImg: z.string().optional(),
     }),
   }),
 });
 
-
-
-//  update validation schema 
+//  update validation schema
 const updateUserNameValidationSchema = z.object({
   firstName: z.string().min(3).max(20).optional(),
   middleName: z.string().min(3).max(20).optional(),

@@ -39,7 +39,6 @@ const createStudentValidationSchema = z.object({
       localGuardian: localGuardianValidationSchema.required(),
       admissionSemester: z.string(),
       academicDepartment: z.string(),
-      // profileImg: z.string().optional(),
     }),
   }),
 });

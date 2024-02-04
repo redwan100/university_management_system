@@ -1,0 +1,19 @@
+{
+  "password": "admin123",
+  "admin": {
+    "designation": "Admin",
+    "name": {
+      "firstName": "Mr. Mezbaul",
+      "middleName": "Abedin",
+      "lastName": "Forhan"
+    },
+    "gender": "male",
+    "dateOfBirth": "1998-04-24",
+    "email": "mezbaul@programming-hero.com",
+    "contactNo": "123567",
+    "emergencyContactNo": "987-654-3210",
+    "bloodGroup": "A+",
+    "presentAddress": "123 Main St, Cityville",
+    "permanentAddress": "456 Oak St, Townsville"
+  }
+}

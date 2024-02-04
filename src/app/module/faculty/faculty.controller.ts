@@ -1,7 +1,7 @@
 import httpStatus from 'http-status';
+import catchAsync from '../../middleware/catchAsync';
 import sendResponse from '../../utils/sendResponse';
 import { FacultyServices } from './faculty.service';
-import catchAsync from '../../middleware/catchAsync';
 
 const getSingleFaculty = catchAsync(async (req, res) => {
   const { id } = req.params;
@@ -41,7 +41,7 @@ const updateFaculty = catchAsync(async (req, res) => {
 
 const deleteFaculty = catchAsync(async (req, res) => {
   const { id } = req.params;
-  const result = await FacultyServices.deleteStudentFromDB(id);
+  const result = await FacultyServices.deleteFacultyFromDB(id);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
