@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { authRoutes } from '../module/Auth/auth.route';
+import { EnrolledCourseRoutes } from '../module/EnrolledCourse/enrolledCourse.route';
 import { offeredCourseRoutes } from '../module/OfferedCourse/offeredCourse.route';
 import { academicDepartmentRoutes } from '../module/academicDepartment/academicDepartment.route';
 import { academicFacultyRoutes } from '../module/academicFaculty/academicFaculty.route';
@@ -54,6 +55,10 @@ const moduleRoutes = [
   {
     path: '/offered-courses',
     route: offeredCourseRoutes,
+  },
+  {
+    path: '/enrolled-courses',
+    route: EnrolledCourseRoutes,
   },
   {
     path: '/auth',
