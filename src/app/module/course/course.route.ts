@@ -50,7 +50,19 @@ router.patch(
 router.put(
   '/:courseId/assign-faculties',
   auth(USER_ROLE.superAdmin, USER_ROLE.admin),
+  // TODO: Add validation schema
   courseControllers.assignFacultiesWithCourse,
+);
+
+router.get(
+  '/:courseId/get-faculties',
+  auth(
+    USER_ROLE.superAdmin,
+    USER_ROLE.admin,
+    USER_ROLE.faculty,
+    USER_ROLE.student,
+  ),
+  courseControllers.getFacultiesWithCourse,
 );
 
 router.delete(
