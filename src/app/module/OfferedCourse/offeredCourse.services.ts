@@ -149,7 +149,15 @@ const getAllOfferedCoursesFromDB = async (query: Record<string, unknown>) => {
   };
 };
 
-const getMyOfferedCoursesFromDB = async (userId: string) => {
+const getMyOfferedCoursesFromDB = async (
+  userId: string,
+  query: Record<string, unknown>,
+) => {
+  // ? setup paginate
+  const page = Number(query?.page) || 1;
+  const limit = Number(query?.limit) || 10;
+  const skip = (page - 1) * limit;
+
   const student = await StudentModel.findOne({ id: userId });
 
   if (!student) {
@@ -170,7 +178,7 @@ const getMyOfferedCoursesFromDB = async (userId: string) => {
     );
   }
 
-  const result = await OfferedCourse.aggregate([
+  const aggregationQuery = [
     {
       $match: {
         semesterRegistration: currentOngoingRegistrationSemester?._id,
@@ -226,8 +234,61 @@ const getMyOfferedCoursesFromDB = async (userId: string) => {
         as: 'enrolledCourses',
       },
     },
+
+    {
+      $lookup: {
+        from: 'enrolledcourses',
+        let: {
+          currentStudent: student?._id,
+        },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $and: [
+                  {
+                    $eq: ['$student', '$$currentStudent'],
+                  },
+                  {
+                    $eq: ['$isCompleted', true],
+                  },
+                ],
+              },
+            },
+          },
+        ],
+        as: 'completedCourses',
+      },
+    },
+
     {
       $addFields: {
+        completedCoursesIds: {
+          $map: {
+            input: '$completedCourses',
+            as: 'completed',
+            in: '$$completed.course',
+          },
+        },
+      },
+    },
+
+    {
+      $addFields: {
+        isPreRequisitesFulFilled: {
+          $or: [
+            {
+              $eq: ['$course.preRequisiteCourses', []],
+            },
+            {
+              $setIsSubset: [
+                '$course.preRequisiteCourses.course',
+                '$completedCoursesIds',
+              ],
+            },
+          ],
+        },
+
         isAlreadyEnrolled: {
           $in: [
             '$course._id',
@@ -246,11 +307,38 @@ const getMyOfferedCoursesFromDB = async (userId: string) => {
     {
       $match: {
         isAlreadyEnrolled: false,
+        isPreRequisitesFulFilled: true,
       },
     },
+  ];
+  const paginationQuery = [
+    {
+      $skip: skip,
+    },
+    {
+      $limit: limit,
+    },
+  ];
+
+  const result = await OfferedCourse.aggregate([
+    ...aggregationQuery,
+    ...paginationQuery,
   ]);
 
-  return result;
+  const total = (await OfferedCourse.aggregate(aggregationQuery)).length;
+
+  // ? setup paginate
+  const totalPage = Math.ceil(result.length / limit);
+
+  return {
+    meta: {
+      page,
+      limit,
+      total,
+      totalPage,
+    },
+    result,
+  };
 };
 
 const getSingleOfferedCourseFromDB = async (id: string) => {
