@@ -6,7 +6,6 @@ import sendResponse from '../../utils/sendResponse';
 import { userService } from './user.service';
 
 const createStudent = catchAsync(async (req, res) => {
-  console.log(req);
   const { password, student: studentData } = req.body;
   const result = await userService.createStudentIntoDB(
     req.file,

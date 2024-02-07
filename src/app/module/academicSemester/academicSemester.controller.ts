@@ -1,7 +1,7 @@
 import httpStatus from 'http-status';
 
-import sendResponse from '../../utils/sendResponse';
 import catchAsync from '../../middleware/catchAsync';
+import sendResponse from '../../utils/sendResponse';
 import { academicSemesterServices } from './academicSemester.service';
 
 const createAcademicSemester = catchAsync(async (req, res) => {
@@ -18,13 +18,16 @@ const createAcademicSemester = catchAsync(async (req, res) => {
 });
 
 const getAllAcademicSemesters = catchAsync(async (req, res) => {
-  const result = await academicSemesterServices.getAllAcademicSemestersFromDB();
+  const result = await academicSemesterServices.getAllAcademicSemestersFromDB(
+    req.query,
+  );
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: 'Academic semesters are retrieved successfully',
-    data: result,
+    meta: result.meta,
+    data: result.result,
   });
 });
 
